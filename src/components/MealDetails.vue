@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import MacroChart from './MacroChart.vue'
 
 const props = defineProps({
     meal: {
@@ -8,20 +8,27 @@ const props = defineProps({
     }
 })
 
-const fats = computed(() => Math.round(props.meal.calories * 0.3 / 9))
-const carbs = computed(() => Math.round(props.meal.calories * 0.4 / 4))
-const protein = computed(() => Math.round(props.meal.calories * 0.3 / 4))
+// 🎯 Define emits to pass save event up to parent
+const emit = defineEmits(['save-meal'])
+
+function handleSaveMeal(mealData) {
+    emit('save-meal', mealData)
+}
 </script>
 
 <template>
-    <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-        <h3 class="text-lg font-semibold mb-3 text-black">Last Logged Meal</h3>
-        <div class="space-y-2 text-gray-500 font-bold">
-            <div class="font-medium">{{ meal.name }}</div>
-            <div class="text-sm text-gray-600">Calories: {{ meal.calories }}</div>
-            <div class="text-sm text-gray-600">Fats: {{ fats }}g</div>
-            <div class="text-sm text-gray-600">Carbs: {{ carbs }}g</div>
-            <div class="text-sm text-gray-600">Protein: {{ protein }}g</div>
-        </div>
+    <div class="mt-8 p-8 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-100">
+        <h3 class="text-2xl font-bold mb-6 text-gray-800 text-center">
+            ✨ Last Logged Meal
+        </h3>
+        
+        <!-- 🎯 Use the FANCY chart -->
+        <MacroChart 
+            :meal="meal" 
+            size="fancy"
+            theme="fancy"
+            :show-legend="true"
+            @save-meal="handleSaveMeal"
+        />
     </div>
 </template>
